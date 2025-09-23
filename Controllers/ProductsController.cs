@@ -1,4 +1,3 @@
-// Controllers/ProductsController.cs
 using Microsoft.AspNetCore.Mvc;
 using OrderSystem.Models;
 using OrderSystem.Services.Interfaces;
@@ -24,7 +23,7 @@ namespace OrderSystem.Controllers
             return Ok(products);
         }
 
-        // GET: api/Products/5
+        // GET: api/Products/id
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {

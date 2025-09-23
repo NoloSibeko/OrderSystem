@@ -9,8 +9,6 @@ namespace OrderSystem.Services.Interfaces
         Task<Customer> CreateCustomerAsync(Customer customer);
         Task UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(int id);
-        
-        // Add these if you want to keep your DTO methods
         Task<CustomerDTO> CreateAsync(CreateCustomerDTO dto);
         Task<CustomerDTO?> GetAsync(int id);
     }

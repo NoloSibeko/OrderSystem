@@ -20,20 +20,54 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICustomerSessionService, CustomerSessionService>();
 
-// ✅ FIX CORS - Add this before building the app
+builder.Services.AddScoped<DataSeeder>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
-            .WithOrigins("http://localhost:3000") // Your React app URL
+            .WithOrigins("http://localhost:3000") 
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
 });
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; // Allow case insensitivity
+    });
+
 var app = builder.Build();
 
-// ✅ FIX CORS - Use CORS middleware early in the pipeline
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        var seeder = services.GetRequiredService<DataSeeder>();
+        
+        Console.WriteLine("Applying database migrations...");
+        await context.Database.MigrateAsync(); // database is created and migrations are applied
+        
+        Console.WriteLine("Seeding database...");
+        await seeder.SeedAsync();
+        
+        Console.WriteLine("Database seeded successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        
+        throw;
+    }
+}
+
+
 app.UseCors("AllowReactApp");
 
 // Configure the HTTP request pipeline.
@@ -44,7 +78,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

@@ -1,12 +1,42 @@
 // frontend/src/types/models.ts
+
+export interface OrderItemDTO {
+  productId: number;
+  productTitle: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+}
+
+export interface OrderDTO {
+  orderId: number;
+  customerId: number;
+  customerName: string;
+  createdAt: string; // ISO string
+  totalAmount: number;
+  items: OrderItemDTO[];
+}
+
+export interface CreateOrderItemDTO {
+  productId: number;
+  quantity: number;
+}
+
+export interface CreateOrderDTO {
+  customerId: number;
+  items: CreateOrderItemDTO[];
+}
+
+
 export interface CustomerDto {
-  id?: number;
+  customerId?: number;
   firstName: string;
   surname: string;
+  email?: string;
+  phone?: string;
   addressType?: 'Residential' | 'Business' | string;
   streetAddress?: string;
   suburb?: string;
-  email: string;
   city?: string;
   postalCode?: string;
 }
@@ -24,16 +54,4 @@ export interface OrderItemDto {
   quantity: number;
   unitPrice?: number;
   product?: ProductDto;
-}
-
-export interface CreateOrderDto {
-  customerId: number;
-  items: OrderItemDto[];
-}
-
-export interface OrderDto {
-  id?: number;
-  customerId: number;
-  createdAt?: string;
-  items: OrderItemDto[];
 }

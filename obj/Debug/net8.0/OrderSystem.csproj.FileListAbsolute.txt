@@ -127,6 +127,7 @@ C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\OrderSystem.AssemblyInfo.cs
 C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\OrderSystem.csproj.CoreCompileInputs.cache
 C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\OrderSystem.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\OrderSystem.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\OrderSystem.sourcelink.json
 C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\nolos\repos\OrderSystem\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json

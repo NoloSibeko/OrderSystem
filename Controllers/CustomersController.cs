@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderSystem.Services.Interfaces; 
 using OrderSystem.Models;
+using OrderSystem.Services.Interfaces;
 
 namespace OrderSystem.Controllers
 {
@@ -17,25 +17,33 @@ namespace OrderSystem.Controllers
             _sessionService = sessionService;
         }
 
-        // POST: api/customers
-        [HttpPost]
-        public async Task<ActionResult<CustomerDTO>> Create([FromBody] CreateCustomerDTO dto)
+        // GET all customers endpoint
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            var customer = await _customerService.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = customer.CustomerId }, customer);
+            try
+            {
+                var customers = await _customerService.GetCustomersAsync();
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving customers: {ex.Message}");
+            }
         }
 
-        // GET: api/customers/{id}
+        // GET: api/Customers/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerDTO>> Get(int id)
+        public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _customerService.GetAsync(id);
+            var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
+            {
                 return NotFound();
-
+            }
             return Ok(customer);
         }
-        
+
         // POST: api/Customers/Login
         [HttpPost("login")]
         public async Task<ActionResult<Customer>> Login([FromBody] CustomerLoginDTO loginDto)
@@ -52,7 +60,7 @@ namespace OrderSystem.Controllers
             return Ok(customer);
         }
 
-        // GET: api/Customers/Current
+        // GET: api/Customers/Current (intended to get the currently logged-in customer, as my project grows in complexity)
         [HttpGet("current")]
         public ActionResult<Customer> GetCurrentCustomer()
         {

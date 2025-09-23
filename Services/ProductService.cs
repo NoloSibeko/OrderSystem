@@ -11,13 +11,12 @@ namespace OrderSystem.Services
 
         public ProductService(ApplicationDbContext db) => _db = db;
 
-        // ✅ Implement this method (remove the throw statement)
         public async Task<IEnumerable<Product>> GetProductsAsync()
         {
             return await _db.Products.ToListAsync();
         }
 
-        // ✅ Implement all other interface methods
+        // other interface methods
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _db.Products.FindAsync(id);
@@ -46,6 +45,5 @@ namespace OrderSystem.Services
             }
         }
 
-        // Remove or implement any other methods that might throw NotImplementedException
     }
 }

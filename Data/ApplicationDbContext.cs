@@ -39,7 +39,7 @@ namespace OrderSystem.Data
                 .HasForeignKey(oi => oi.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Optional: precision for Price
+            // precision for Price
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);

@@ -1,4 +1,3 @@
-// frontend/src/components/ProductList.tsx
 import React, { useEffect, useState } from "react";
 import { ProductDto } from "../types/models";
 import { getProducts } from "../api/api";
@@ -59,52 +58,35 @@ const ProductList: React.FC<Props> = ({ onAddToBasket }) => {
   }
 
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      flexWrap: 'wrap', 
-      gap: 3,
-      justifyContent: { xs: 'center', sm: 'flex-start' }
-    }}>
-      {products.map((product) => (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, justifyContent: { xs: 'center', sm: 'flex-start' } }}>
+      {products.map((product, index) => (
         <Box 
-          key={product.id}
+          key={product.id ?? index} 
           sx={{
-            width: { 
-              xs: '100%', 
-              sm: 'calc(50% - 12px)', 
-              md: 'calc(33.333% - 16px)', 
-              lg: 'calc(25% - 18px)' 
-            },
+            width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.333% - 16px)', lg: 'calc(25% - 18px)' },
             maxWidth: '300px',
             minWidth: '250px'
           }}
         >
-          <Card sx={{ 
-            borderRadius: 3, 
-            boxShadow: 4, 
-            position: "relative",
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
+          <Card sx={{ borderRadius: 3, boxShadow: 4, position: "relative", height: '100%', display: 'flex', flexDirection: 'column' }}>
             {product.imageUrl && (
               <CardMedia
                 component="img"
                 height="180"
                 image={product.imageUrl}
-                alt={product.title}
+                alt={product.title ?? "No title"}
                 sx={{ objectFit: "cover" }}
               />
             )}
             <CardContent sx={{ flexGrow: 1 }}>
               <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: "bold" }}>
-                {product.title}
+                {product.title ?? "No title"}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                {product.description}
+                {product.description ?? "No description"}
               </Typography>
               <Chip 
-                label={`R${product.price.toFixed(2)}`} 
+                label={`R${product.price != null ? product.price.toFixed(2) : "0.00"}`} 
                 color="primary" 
                 sx={{ fontWeight: "bold" }} 
               />

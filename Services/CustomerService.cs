@@ -11,7 +11,6 @@ namespace OrderSystem.Services
 
         public CustomerService(ApplicationDbContext db) => _db = db;
 
-        // ✅ Implement all interface methods
         public async Task<IEnumerable<Customer>> GetCustomersAsync()
         {
             return await _db.Customers.ToListAsync();
