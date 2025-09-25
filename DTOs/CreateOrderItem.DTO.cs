@@ -1,4 +1,4 @@
- public class CreateOrderItemDTO
+ public class CreateOrderItemDto
     {   
         public int ProductId { get; set; }
 

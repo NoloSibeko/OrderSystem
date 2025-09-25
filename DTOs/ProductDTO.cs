@@ -1,4 +1,4 @@
- public class ProductDTO
+ public class ProductDto
     {
         public int ProductId { get; set; }
         public string Title { get; set; } = string.Empty;

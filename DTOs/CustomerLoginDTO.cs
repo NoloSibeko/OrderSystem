@@ -1,6 +1,6 @@
 namespace OrderSystem.Models
 {
-    public class CustomerLoginDTO
+    public class CustomerLoginDto
     {
         public string Email { get; set; } = string.Empty;
     }

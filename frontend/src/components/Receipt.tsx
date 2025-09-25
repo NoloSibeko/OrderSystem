@@ -1,4 +1,4 @@
-// frontend/src/components/Receipt.tsx
+// Receipt.tsx - Fix currency symbols
 import React from 'react';
 import { OrderDTO } from '../types/models';
 import {
@@ -36,20 +36,18 @@ Items:
 ${items
   .map(
     (item) =>
-      `${item.productTitle ?? 'No title'} x${item.quantity ?? 0} - $${(
-        item.unitPrice ?? 0
-      ).toFixed(2)} = $${(item.lineTotal ?? 0).toFixed(2)}`
+      `${item.productTitle} x${item.quantity} - R${(item.unitPrice ?? 0).toFixed(2)} = R${(item.lineTotal ?? 0).toFixed(2)}`
   )
   .join('\n')}
 
-Total: $${(order.totalAmount ?? 0).toFixed(2)}
+Total: R${(order.totalAmount ?? 0).toFixed(2)}
     `;
 
     const blob = new Blob([receiptText], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `receipt-order-${order.orderId ?? 'unknown'}.txt`;
+    a.download = `receipt-order-${order.orderId}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -83,6 +81,9 @@ Total: $${(order.totalAmount ?? 0).toFixed(2)}
         <Typography variant="body2">
           <strong>Customer:</strong> {order.customerName}
         </Typography>
+        <Typography variant="body2">
+          <strong>Customer ID:</strong> {order.customerId}
+        </Typography>
       </Box>
 
       <Divider sx={{ my: 2 }} />
@@ -97,15 +98,15 @@ Total: $${(order.totalAmount ?? 0).toFixed(2)}
             <TableRow>
               <TableCell>Product</TableCell>
               <TableCell align="right">Qty</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Total</TableCell>
+              <TableCell align="right">Unit Price</TableCell>
+              <TableCell align="right">Line Total</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {items.map((item, index) => (
               <TableRow key={index}>
-                <TableCell>{item.productTitle ?? 'No title'}</TableCell>
-                <TableCell align="right">{item.quantity ?? 0}</TableCell>
+                <TableCell>{item.productTitle}</TableCell>
+                <TableCell align="right">{item.quantity}</TableCell>
                 <TableCell align="right">R{(item.unitPrice ?? 0).toFixed(2)}</TableCell>
                 <TableCell align="right">R{(item.lineTotal ?? 0).toFixed(2)}</TableCell>
               </TableRow>
@@ -127,7 +128,7 @@ Total: $${(order.totalAmount ?? 0).toFixed(2)}
       {/* Actions */}
       <Box sx={{ display: 'flex', gap: 2, mt: 3, justifyContent: 'center' }}>
         <Button variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownload}>
-          Download
+          Download Receipt
         </Button>
         <Button variant="contained" onClick={onClose}>
           Continue Shopping

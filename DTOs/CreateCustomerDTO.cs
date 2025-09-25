@@ -1,4 +1,4 @@
-    public class CreateCustomerDTO
+    public class CreateCustomerDto
     {
         public string FirstName { get; set; } = string.Empty;
         public string Surname { get; set; } = string.Empty;

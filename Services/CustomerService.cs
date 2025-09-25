@@ -44,8 +44,8 @@ namespace OrderSystem.Services
             }
         }
 
-        // ✅ Your existing DTO methods
-        public async Task<CustomerDTO> CreateAsync(CreateCustomerDTO dto)
+        // existing DTO methods
+        public async Task<CustomerDto> CreateAsync(CreateCustomerDto dto)
         {
             var customer = new Customer
             {
@@ -61,7 +61,7 @@ namespace OrderSystem.Services
             _db.Customers.Add(customer);
             await _db.SaveChangesAsync();
 
-            return new CustomerDTO
+            return new CustomerDto
             {
                 CustomerId = customer.CustomerId,
                 FirstName = customer.FirstName,
@@ -74,12 +74,12 @@ namespace OrderSystem.Services
             };
         }
 
-        public async Task<CustomerDTO?> GetAsync(int id)
+        public async Task<CustomerDto?> GetAsync(int id)
         {
             var customer = await _db.Customers.FindAsync(id);
             if (customer == null) return null;
-
-            return new CustomerDTO
+ 
+            return new CustomerDto
             {
                 CustomerId = customer.CustomerId,
                 FirstName = customer.FirstName,
@@ -90,6 +90,11 @@ namespace OrderSystem.Services
                 City = customer.City,
                 PostalCode = customer.PostalCode
             };
+        }
+
+        Task<CustomerDto?> ICustomerService.GetAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

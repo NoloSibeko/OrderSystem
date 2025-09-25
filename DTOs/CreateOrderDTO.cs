@@ -1,4 +1,4 @@
-    public class CreateOrderDTO
+    public class CreateOrderDto
     {    public int CustomerId { get; set; } 
-    public List<CreateOrderItemDTO> Items { get; set; } = new();
+    public List<CreateOrderItemDto> Items { get; set; } = new();
     }

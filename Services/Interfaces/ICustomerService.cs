@@ -9,7 +9,7 @@ namespace OrderSystem.Services.Interfaces
         Task<Customer> CreateCustomerAsync(Customer customer);
         Task UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(int id);
-        Task<CustomerDTO> CreateAsync(CreateCustomerDTO dto);
-        Task<CustomerDTO?> GetAsync(int id);
+        Task<CustomerDto> CreateAsync(CreateCustomerDto dto);
+        Task<CustomerDto?> GetAsync(int id);
     }
 }

@@ -14,7 +14,7 @@ namespace OrderSystem.Services
             _db = db;
         }
 
-        public async Task<OrderDTO> CreateAsync(CreateOrderDTO dto)
+        public async Task<OrderDto> CreateAsync(CreateOrderDto dto)
         {
             // Fetch customer
             var customer = await _db.Customers.FindAsync(dto.CustomerId);
@@ -25,7 +25,7 @@ namespace OrderSystem.Services
             var order = new Order
             {
                 CustomerId = customer.CustomerId,
-                Customer = customer, // attach entity
+                Customer = customer,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -39,7 +39,7 @@ namespace OrderSystem.Services
                 order.Items.Add(new OrderItem
                 {
                     ProductId = product.ProductId,
-                    Product = product, // attach entity
+                    Product = product,
                     Quantity = item.Quantity,
                     UnitPrice = product.Price
                 });
@@ -52,38 +52,11 @@ namespace OrderSystem.Services
             _db.Orders.Add(order);
             await _db.SaveChangesAsync();
 
-            // Reload order with navigation properties
-            var fullOrder = await _db.Orders
-                .Include(o => o.Items)
-                .ThenInclude(i => i.Product)
-                .Include(o => o.Customer)
-                .FirstOrDefaultAsync(o => o.OrderId == order.OrderId);
-
-            // Map to DTO
-            return new OrderDTO
-            {
-                OrderId = fullOrder.OrderId,
-                CustomerId = fullOrder.CustomerId,
-                CustomerName = $"{fullOrder.Customer.FirstName} {fullOrder.Customer.Surname}",
-                CreatedAt = fullOrder.CreatedAt,
-                TotalAmount = fullOrder.TotalAmount,
-                Items = fullOrder.Items.Select(i => new OrderItemDTO
-                {
-                    ProductId = i.ProductId,
-                    ProductTitle = i.Product?.Title ?? string.Empty,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice,
-                    LineTotal = i.Quantity * i.UnitPrice
-                }).ToList()
-            };
+            // Return the created order by calling GetAsync
+            return await GetAsync(order.OrderId);
         }
 
-        public Task<Order> CreateOrderAsync(Order order)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<OrderDTO?> GetAsync(int id)
+        public async Task<OrderDto?> GetAsync(int id)
         {
             var order = await _db.Orders
                 .Include(o => o.Items)
@@ -93,14 +66,14 @@ namespace OrderSystem.Services
 
             if (order == null) return null;
 
-            return new OrderDTO
+            return new OrderDto
             {
                 OrderId = order.OrderId,
                 CustomerId = order.CustomerId,
                 CustomerName = $"{order.Customer.FirstName} {order.Customer.Surname}",
                 CreatedAt = order.CreatedAt,
                 TotalAmount = order.TotalAmount,
-                Items = order.Items.Select(i => new OrderItemDTO
+                Items = order.Items.Select(i => new OrderItemDto
                 {
                     ProductId = i.ProductId,
                     ProductTitle = i.Product?.Title ?? string.Empty,
@@ -111,17 +84,7 @@ namespace OrderSystem.Services
             };
         }
 
-        public Task<Order> GetOrderByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Order>> GetOrdersAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<OrderDTO>> GetOrdersByCustomerAsync(int customerId)
+        public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerAsync(int customerId)
         {
             var orders = await _db.Orders
                 .Where(o => o.CustomerId == customerId)
@@ -130,14 +93,14 @@ namespace OrderSystem.Services
                 .Include(o => o.Customer)
                 .ToListAsync();
 
-            return orders.Select(order => new OrderDTO
+            return orders.Select(order => new OrderDto
             {
                 OrderId = order.OrderId,
                 CustomerId = order.CustomerId,
                 CustomerName = $"{order.Customer.FirstName} {order.Customer.Surname}",
                 CreatedAt = order.CreatedAt,
                 TotalAmount = order.TotalAmount,
-                Items = order.Items.Select(i => new OrderItemDTO
+                Items = order.Items.Select(i => new OrderItemDto
                 {
                     ProductId = i.ProductId,
                     ProductTitle = i.Product?.Title ?? string.Empty,
@@ -148,7 +111,7 @@ namespace OrderSystem.Services
             });
         }
 
-        public async Task UpdateAsync(int id, CreateOrderDTO updateDto)
+        public async Task UpdateAsync(int id, CreateOrderDto updateDto)
         {
             var order = await _db.Orders
                 .Include(o => o.Items)
@@ -156,8 +119,10 @@ namespace OrderSystem.Services
 
             if (order == null) throw new KeyNotFoundException("Order not found");
 
+            // Remove existing items
             _db.OrderItems.RemoveRange(order.Items);
 
+            // Add new items
             foreach (var item in updateDto.Items)
             {
                 var product = await _db.Products.FindAsync(item.ProductId);
@@ -174,7 +139,6 @@ namespace OrderSystem.Services
             }
 
             order.TotalAmount = order.Items.Sum(i => i.Quantity * i.UnitPrice);
-
             await _db.SaveChangesAsync();
         }
     }

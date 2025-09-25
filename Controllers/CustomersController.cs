@@ -46,7 +46,7 @@ namespace OrderSystem.Controllers
 
         // POST: api/Customers/Login
         [HttpPost("login")]
-        public async Task<ActionResult<Customer>> Login([FromBody] CustomerLoginDTO loginDto)
+        public async Task<ActionResult<Customer>> Login([FromBody] CustomerLoginDto loginDto)
         {
             var customers = await _customerService.GetCustomersAsync();
             var customer = customers.FirstOrDefault(c => c.Email == loginDto.Email);

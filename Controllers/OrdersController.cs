@@ -19,7 +19,7 @@ namespace OrderSystem.Controllers
 
         // POST: api/orders
         [HttpPost]
-        public async Task<ActionResult<OrderDTO>> CreateOrder([FromBody] CreateOrderDTO createOrderDto)
+        public async Task<ActionResult<OrderDto>> CreateOrder([FromBody] CreateOrderDto createOrderDto)
         {
             if (createOrderDto == null || createOrderDto.Items == null || !createOrderDto.Items.Any())
                 return BadRequest("Invalid order data. Order must have at least one item.");
@@ -38,7 +38,7 @@ namespace OrderSystem.Controllers
 
         // GET: api/orders/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDTO>> GetOrder(int id)
+        public async Task<ActionResult<OrderDto>> GetOrder(int id)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace OrderSystem.Controllers
 
         // GET: api/orders/customer/{customerId}
         [HttpGet("customer/{customerId}")]
-        public async Task<ActionResult<IEnumerable<OrderDTO>>> GetCustomerOrders(int customerId)
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetCustomerOrders(int customerId)
         {
             try
             {
